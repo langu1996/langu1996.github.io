@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>生肖分类器</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+      display: flex; /* 使用 flexbox 布局 */
+      justify-content: center; /* 水平居中 */
+    }
+
+    .container {
+      width: 50%; /* 页面占用百分之五十 */
+      display: flex; /* 采用 flex 布局 */
+      flex-direction: column; /* 垂直布局 */
+      align-items: center; /* 垂直居中 */
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      margin-bottom: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      margin-top: 20px;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      width: 100%; /* 结果部分占满右侧列 */
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>生肖分类器</h1>
+    <label for="inputNumbers">请输入数字（用连字符“-”分隔）：</label>
+    <input type="text" id="inputNumbers">
+    <button onclick="classifyNumbers()">分类</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const zodiacNumbers = {
+      '兔': ['01', '13', '25', '37', '49'],
+      '虎': ['02', '14', '26', '38'],
+      '牛': ['03', '15', '27', '39'],
+      '鼠': ['04', '16', '28', '40'],
+      '猪': ['05', '17', '29', '41'],
+      '狗': ['06', '18', '30', '42'],
+      '鸡': ['07', '19', '31', '43'],
+      '猴': ['08', '20', '32', '44'],
+      '羊': ['09', '21', '33', '45'],
+      '马': ['10', '22', '34', '46'],
+      '蛇': ['11', '23', '35', '47'],
+      '龙': ['12', '24', '36', '48']
+    };
+
+    function classifyNumbers() {
+      const input = document.getElementById('inputNumbers').value;
+      const numbers = input.split('-');
+
+      const result = {};
+
+      for (const zodiac in zodiacNumbers) {
+        result[zodiac] = numbers.filter(num => zodiacNumbers[zodiac].includes(num));
+      }
+
+      displayResult(result);
+    }
+
+    function displayResult(result) {
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '';
+
+      for (const zodiac in result) {
+        if (result[zodiac].length > 0) {
+          const paragraph = document.createElement('p');
+          paragraph.textContent = `${zodiac}：${result[zodiac].join(', ')}`;
+          resultDiv.appendChild(paragraph);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
