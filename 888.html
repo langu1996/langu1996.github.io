@@ -50,7 +50,7 @@
       background-color: #45a049;
     }
 
-    #result, #colorResult {
+    #result, #colorResult, #excludeResult {
       margin-top: 20px;
       background-color: #fff;
       padding: 10px;
@@ -76,10 +76,15 @@
     <h1>生肖分类器</h1>
     <label for="inputNumbers">请输入数字（用连字符“-”分隔）：</label>
     <input type="text" id="inputNumbers">
+    
+    <label for="inputZodiac">请输入生肖（用逗号“,”或空格“ ”分隔）：</label>
+    <input type="text" id="inputZodiac">
+
     <button onclick="classifyNumbers()">分类</button>
 
     <div id="result"></div>
     <div id="colorResult"></div>
+    <div id="excludeResult"></div>
   </div>
 
   <script>
@@ -99,17 +104,28 @@
     };
 
     function classifyNumbers() {
-      const input = document.getElementById('inputNumbers').value;
-      const numbers = input.split('-');
+      const inputNumbers = document.getElementById('inputNumbers').value;
+      const numbers = inputNumbers.split('-');
+
+      const inputZodiac = document.getElementById('inputZodiac').value;
+      const excludeZodiacs = inputZodiac.trim().split(/[, ]+/);
 
       const result = {};
+      const excludedNumbers = [];
 
       for (const zodiac in zodiacNumbers) {
-        result[zodiac] = numbers.filter(num => zodiacNumbers[zodiac].includes(num));
+        if (excludeZodiacs.includes(zodiac)) {
+          excludedNumbers.push(...zodiacNumbers[zodiac]);
+        } else {
+          result[zodiac] = numbers.filter(num => zodiacNumbers[zodiac].includes(num));
+        }
       }
 
+      const remainingNumbers = numbers.filter(num => !excludedNumbers.includes(num));
+
       displayResult(result);
-      displayColorResult(numbers);
+      displayColorResult(remainingNumbers);
+      displayExcludeResult(excludedNumbers);
     }
 
     function displayResult(result) {
@@ -156,6 +172,17 @@
           paragraph.classList.add(color.toLowerCase());
           colorResultDiv.appendChild(paragraph);
         }
+      }
+    }
+
+    function displayExcludeResult(excludedNumbers) {
+      const excludeResultDiv = document.getElementById('excludeResult');
+      excludeResultDiv.innerHTML = '';
+
+      if (excludedNumbers.length > 0) {
+        const paragraph = document.createElement('p');
+        paragraph.textContent = `排除的数字：${excludedNumbers.join(', ')}`;
+        excludeResultDiv.appendChild(paragraph);
       }
     }
   </script>
